@@ -28,31 +28,32 @@ if __name__ == "__main__":
 
     p = TableParameters()
     
-    a_0 = p.e_E * p.sigma - p.C_C * p.r_LE * (1 - p.r_LE) * p.e_E * p.sigma
-    b_0 = p.f_A * (p.r_LE - 1) * p.e_A * p.sigma
+    a_0 = p.e_E * p.sigma * (1 - p.C_C * p.r_LC * (1 - p.r_LE))
+    b_0 = p.f_A * p.e_A * p.sigma * (p.r_LE - 1)
     c_0 = p.alpha
     d_0 = - p.beta
-    e_0 = (1 - p.r_SE - p.r_SM - p.C_C * p.r_SC) * (1 - p.a_SW - p.a_O3 - p.C_C * p.a_SC) * p.P_s
+    e_0 = (1 - p.r_SM) * (1 - p.C_C * p.r_SC) * (1 - p.a_SW) * (1 - p.a_O3) * (1 - p.C_C * p.a_SC) * p.P_s
 
-    a_1 = p.e_E * p.sigma * (p.C_C * p.r_LC - 1)
-    b_1 = p.e_A * p.sigma + (1 - p.f_A) * p.e_A * p.sigma
+    a_1 = - p.e_E * p.sigma * ((1 - p.C_C * p.r_LC) * p.C_C * p.a_LC + (1 - p.C_C * p.r_LC) * (1 - p.C_C * p.a_LC) * p.a_LW)
+    b_1 = p.e_A * p.sigma
     c_1 = - p.alpha
     d_1 = p.beta
-    e_1 = (1 - p.r_SE - p.r_SM - p.C_C * p.r_SC) * (p.a_SW + p.a_O3 + p.C_C * p.a_SC) * p.P_s
+    e_1 = ((1 - p.r_SM) * p.a_SW + (1 - p.r_SM) * (1 - p.a_SW) * p.a_O3 + (1 - p.r_SM) * (1 - p.a_SW) * (1 - p.a_O3) * (1 - p.C_C * p.r_SC) * p.C_C * p.a_SC) * p.P_s
 
     A, E = np.array([[a_0, b_0, c_0, d_0], [a_1, b_1, c_1, d_1]]), np.array([e_0, e_1])
+
+    print(A)
+    print()
+    print(E)
 
 
     def F(temperature: np.ndarray):
         X = np.concatenate((np.power(temperature, 4), temperature))
         return np.matmul(A, X) - E
 
-
-    
-    # print((1 - p.C_C * p.r_SC - p.r_SE - p.r_SM) * (1 - p.a_O3 - p.a_SW - p.C_C * p.a_SC))
-
     equilib_temp = scipy.optimize.anderson(F, np.array([280, 280]), f_tol = 1e-9)
-    print(equilib_temp - 273.15)
+    print("Solution:  ", equilib_temp - 273.15)
     
+    print(p.e_A * p.sigma * equilib_temp[1]**4)
 
     
