@@ -1,1 +1,8 @@
 .vscode
+simple_climate_model.aux
+simple_climate_model.fdb_latexmk
+simple_climate_model.fls
+simple_climate_model.log
+simple_climate_model.out
+simple_climate_model.synctex.gz
+simple_climate_model.tex
