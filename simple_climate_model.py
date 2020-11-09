@@ -233,7 +233,6 @@ if __name__ == "__main__":
 
 
     # Model 3 with custom coefficients
-
     custom_params = TableParameters(
         r_SC=base_params.r_SC - 0.02,
         a_SW=base_params.a_SW - 0.015,
@@ -243,4 +242,4 @@ if __name__ == "__main__":
 
 
     find_derivatives(climate_model_2, custom_params, 1e-4, change=0.02)    
-    print(climate_model_3(custom_params, True) - cels_norm)
+    print(climate_model_2(base_params, True) - cels_norm)
